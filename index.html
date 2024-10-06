@@ -11,20 +11,29 @@
               href="/css/materialize.min.css">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
               rel="stylesheet">
+        <style>
+            input::placeholder {
+                color: #1976d2;
+                opacity: 1;
+            }
+            .input-field label {
+                color:black;
+            }
+        </style>
     </head>
-    <body class="grey lighten-4">
+    <body class="cyan lighten-4">
         <header>
             <!-- Nav bar for bigger screens -->
-            <nav class="z-depth-0 orange lighten-4">
+            <nav class="z-depth-1 red lighten-2">
                 <div class="nav-wrapper container">
                     <a href="/index.html"
-                       class="brand-logo orange-text text-darken-2"
+                       class="brand-logo white-text"
                        aria-label="Budget Tracker Home">
                         Budget Tracker
                     </a>
                     <!-- Hamburger menu for medium and small screens -->
                     <a href="#"
-                       class="sidenav-trigger left hide-on-med-and-up black-text"
+                       class="sidenav-trigger left hide-on-med-and-up white-text"
                        data-target="mobile-menu">
                         <i class="material-icons">menu</i>
                     </a>
@@ -32,19 +41,19 @@
                     <ul class="right hide-on-small-and-down">
                         <li>
                             <a href="/index.html"
-                               class="waves-effect grey-text text-darken-4">
+                               class="waves-effect amber-text text-lighten-3">
                                 Home
                             </a>
                         </li>
                         <li>
                             <a href="/pages/about.html"
-                               class="waves-effect grey-text text-darken-4">
+                               class="waves-effect amber-text text-lighten-3">
                                 About
                             </a>
                         </li>
                         <li>
                             <a href="/pages/contact.html"
-                               class="waves-effect grey-text text-darken-4">
+                               class="waves-effect amber-text text-lighten-3">
                                 Contact
                             </a>
                         </li>
@@ -53,35 +62,191 @@
             </nav>
         </header>
         <aside>
-            <ul class="sidenav" id="mobile-menu">
+            <ul class="sidenav blue lighten-3"
+                id="mobile-menu">
                 <li>
-                    <a class="subheader">
-                        Task Manager
+                    <a class="subheader lime-text text-darken-3">
+                        Budget Tracker
                     </a>
                 </li>
                 <li>
                     <a href="/index.html"
-                       class="waves-effect grey-text text-darken-4">
+                       class="waves-effect white-text">
                         Home
                     </a>
                 </li>
                 <li>
                     <a href="/pages/about.html"
-                       class="waves-effect grey-text text-darken-4">
+                       class="waves-effect white-text">
                         About
                     </a>
                 </li>
                 <li>
                     <a href="/pages/contact.html"
-                       class="waves-effect grey-text text-darken-4">
-                        <i class="material-icons">mail_outline</i>
+                       class="waves-effect white-text">
+                        <i class="material-icons white-text right">mail_outline</i>
                         Contact
                     </a>
                 </li>
             </ul>
         </aside>
         <main>
-
+            <!-- This is the balance card -->
+            <div class="container">
+                <div class="card purple lighten-2">
+                    <div class="card-content white-text z-depth-2">
+                        <span class="card-title">
+                            Current Balance: $0.00
+                        </span>
+                        <p>
+                            Total Income: $0.00
+                        </p>
+                        <p>
+                            Total Expenses: $0.00
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- This is the transaction input card -->
+            <div class="container">
+                <h5 class="teal-text text-darken-2">
+                    Add Transaction
+                </h5>
+                <form>
+                    <div class="input-field">
+                        <input id="amount"
+                               type="number"
+                               placeholder="Enter amount">
+                        <label for="amount">
+                            Amount
+                        </label>
+                    </div>
+                    <div class="input-field">
+                        <select>
+                            <option value=""
+                                    disabled
+                                    selected>
+                                Choose type
+                            </option>
+                            <option value="1">
+                                Income
+                            </option>
+                            <option value="2">
+                                Expense
+                            </option>
+                        </select>
+                        <label>
+                            Transaction Type
+                        </label>
+                    </div>
+                    <div class="input-field">
+                        <input id="category"
+                               type="text"
+                               placeholder="Enter category">
+                        <label for="category">
+                            Category
+                        </label>
+                    </div>
+                    <button class="btn red lighten-2 waves-effect waves-light"
+                            type="submit"
+                            name="action">
+                        Add Transaction
+                    </button>
+                </form>
+            </div>
+            <!-- This is the transaction list -->
+            <div class="container">
+                <h5 class="teal-text text-darken-2">
+                    Recent Transactions
+                </h5>
+                <ul class="collection z-depth-2">
+                    <li class="collection-item yellow lighten-3 black-text">
+                        <div class="row valign-wrapper"
+                             style="margin-bottom: 0;">
+                            <!-- Small image icon -->
+                            <div class="col s2 m1 l1">
+                                <img src="/img/income.jpeg"
+                                     class="circle responsive-img"
+                                     alt="Income Icon">
+                            </div>
+                            <!-- Centered text next to icon -->
+                            <div class="col s10 m11 l11">
+                                <span class="black-text">
+                                    Income: Salary - $5000.00
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="collection-item yellow lighten-3 black-text">
+                        <div class="row valign-wrapper"
+                             style="margin-bottom: 0;">
+                            <!-- Small image icon -->
+                            <div class="col s2 m1 l1">
+                                <img src="/img/expense.jpeg"
+                                     class="circle responsive-img"
+                                     alt="Income Icon">
+                            </div>
+                            <!-- Centered text next to icon -->
+                            <div class="col s10 m11 l11">
+                                <span class="black-text">
+                                    Expense: Rent - $1200.00
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="collection-item yellow lighten-3 black-text">
+                        <div class="row valign-wrapper"
+                             style="margin-bottom: 0;">
+                            <!-- Small image icon -->
+                            <div class="col s2 m1 l1">
+                                <img src="/img/expense.jpeg"
+                                     class="circle responsive-img"
+                                     alt="Income Icon">
+                            </div>
+                            <!-- Centered text next to icon -->
+                            <div class="col s10 m11 l11">
+                                <span class="black-text">
+                                    Expense: Groceries - $150.00
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="collection-item yellow lighten-3 black-text">
+                        <div class="row valign-wrapper"
+                             style="margin-bottom: 0;">
+                            <!-- Small image icon -->
+                            <div class="col s2 m1 l1">
+                                <img src="/img/expense.jpeg"
+                                     class="circle responsive-img"
+                                     alt="Income Icon">
+                            </div>
+                            <!-- Centered text next to icon -->
+                            <div class="col s10 m11 l11">
+                                <span class="black-text">
+                                    Expense: Utilities - $100.00
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- This is the budget summary -->
+            <div class="container">
+                <h5 class="teal-text text-darken-2">
+                    Budget Overview
+                </h5>
+                <p>
+                    Total Monthly Budget: $2000
+                </p>
+                <p>
+                    Remaining: $550.00
+                </p>
+                <div class="progress blue lighten-1 z-depth-2" style="height: 1rem;">
+                    <div class="determinate"
+                         style="width: 72%; background-color: #E57373;">
+                    </div>
+                </div>
+            </div>
         </main>
         <script src="/js/materialize.min.js"></script>
         <script src="/js/ui.js"></script>
