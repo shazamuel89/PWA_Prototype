@@ -11,7 +11,7 @@ View Recent Transactions: The app displays a list of recent transactions, allowi
 Visual Indicators: The application features visual elements like a balance overview card and a progress bar to represent financial data effectively.
 
 To view the Budget Tracker prototype, follow these steps:
-Clone the github repository using this line of code in git: git clone https://github.com/shazamuel89/PWA_Prototype.git
+Clone the github repository using this line of code in git: "git clone https://github.com/shazamuel89/PWA_Prototype.git"
 Open the project in Visual Studio Code.
 Using the extension live server, click "Open With Live Server" at the bottom right of the window.
 The webpage should open in a new tab in your default browser!
