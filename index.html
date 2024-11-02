@@ -116,13 +116,13 @@
                     <div class="input-field">
                         <input id="amount"
                                type="number"
-                               placeholder="Enter amount">
+                               placeholder="00.00">
                         <label for="amount">
-                            Amount
+                            Amount in US dollars
                         </label>
                     </div>
                     <div class="input-field">
-                        <select>
+                        <select id="type">
                             <option value=""
                                     disabled
                                     selected>
@@ -142,12 +142,20 @@
                     <div class="input-field">
                         <input id="category"
                                type="text"
-                               placeholder="Enter category">
+                               placeholder="Enter category (groceries, rent, paycheck, etc.)">
                         <label for="category">
                             Category
                         </label>
                     </div>
-                    <button class="btn red lighten-2 waves-effect waves-light"
+                    <div class="input-field">
+                        <input id="description"
+                               type="text"
+                               placeholder="Enter a short description">
+                        <label for="description">
+                            Description
+                        </label>
+                    </div>
+                    <button class="add-transfer btn red lighten-2 waves-effect waves-light"
                             type="submit"
                             name="action">
                         Add Transaction
@@ -159,99 +167,7 @@
                 <h5 class="teal-text text-darken-2">
                     Recent Transactions
                 </h5>
-                <ul class="collection z-depth-2">
-                    <li class="collection-item yellow lighten-3 black-text">
-                        <div class="row valign-wrapper"
-                             style="margin-bottom: 0;">
-                            <!-- Small image icon -->
-                            <div class="col s2 m1 l1">
-                                <img src="/img/income.jpeg"
-                                     class="circle responsive-img"
-                                     alt="Income Icon">
-                            </div>
-                            <!-- Centered text next to icon -->
-                            <div class="col s9 m10 l10">
-                                <span class="black-text">
-                                    Income: Salary - $5000.00
-                                </span>
-                            </div>
-                            <!-- Delete icon -->
-                            <div class="col s1 m1 l1">
-                                <button class="transaction-delete btn-flat" aria-label="Delete Transaction">
-                                    <i class="material-icons black-text-darken-1">delete</i>
-                                </button>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="collection-item yellow lighten-3 black-text">
-                        <div class="row valign-wrapper"
-                             style="margin-bottom: 0;">
-                            <!-- Small image icon -->
-                            <div class="col s2 m1 l1">
-                                <img src="/img/expense.jpeg"
-                                     class="circle responsive-img"
-                                     alt="Income Icon">
-                            </div>
-                            <!-- Centered text next to icon -->
-                            <div class="col s10 m11 l11">
-                                <span class="black-text">
-                                    Expense: Rent - $1200.00
-                                </span>
-                            </div>
-                            <!-- Delete icon -->
-                            <div class="col s1 m1 l1">
-                                <button class="transaction-delete btn-flat" aria-label="Delete Transaction">
-                                    <i class="material-icons black-text-darken-1">delete</i>
-                                </button>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="collection-item yellow lighten-3 black-text">
-                        <div class="row valign-wrapper"
-                             style="margin-bottom: 0;">
-                            <!-- Small image icon -->
-                            <div class="col s2 m1 l1">
-                                <img src="/img/expense.jpeg"
-                                     class="circle responsive-img"
-                                     alt="Income Icon">
-                            </div>
-                            <!-- Centered text next to icon -->
-                            <div class="col s10 m11 l11">
-                                <span class="black-text">
-                                    Expense: Groceries - $150.00
-                                </span>
-                            </div>
-                            <!-- Delete icon -->
-                            <div class="col s1 m1 l1">
-                                <button class="transaction-delete btn-flat" aria-label="Delete Transaction">
-                                    <i class="material-icons black-text-darken-1">delete</i>
-                                </button>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="collection-item yellow lighten-3 black-text">
-                        <div class="row valign-wrapper"
-                             style="margin-bottom: 0;">
-                            <!-- Small image icon -->
-                            <div class="col s2 m1 l1">
-                                <img src="/img/expense.jpeg"
-                                     class="circle responsive-img"
-                                     alt="Income Icon">
-                            </div>
-                            <!-- Centered text next to icon -->
-                            <div class="col s10 m11 l11">
-                                <span class="black-text">
-                                    Expense: Utilities - $100.00
-                                </span>
-                            </div>
-                            <!-- Delete icon -->
-                            <div class="col s1 m1 l1">
-                                <button class="transaction-delete btn-flat" aria-label="Delete Transaction">
-                                    <i class="material-icons black-text-darken-1">delete</i>
-                                </button>
-                            </div>
-                        </div>
-                    </li>
+                <ul class="collection z-depth-2 transfers">
                 </ul>
             </div>
             <!-- This is the budget summary -->
@@ -273,6 +189,6 @@
             </div>
         </main>
         <script src="/js/materialize.min.js"></script>
-        <script src="/js/ui.js"></script>
+        <script type="module" src="/js/ui.js"></script>
     </body>
 </html>

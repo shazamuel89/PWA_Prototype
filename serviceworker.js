@@ -1,5 +1,5 @@
 // version number is checked upon page reload, if new v#, then reloads cache
-const CACHE_NAME = "budget-tracker-v3";
+const CACHE_NAME = "budget-tracker-v10";
 
 // These are the assets that will be cached
 const ASSETS_TO_CACHE = [

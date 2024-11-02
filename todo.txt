@@ -1,0 +1,6 @@
+Figure out why only every other transaction is added
+
+Figure out why transactions aren't persistent when closing and reopening live server
+
+Add date to transactions
+
