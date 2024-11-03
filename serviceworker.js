@@ -10,8 +10,12 @@ const ASSETS_TO_CACHE = [
     "/css/materialize.min.css",
     "/js/materialize.min.js",
     "/js/ui.js",
-    "/img/expense.jpeg",
-    "/img/income.jpeg"
+    "/img/Expense.png",
+    "/img/Income.png",
+    "/img/icons/favicon-192x192.png",
+    "/img/icons/favicon-16x16.png",
+    "/img/screenshots/screenshot_add_income.png",
+    "/img/screenshots/screenshot_add_expense.png"
 ];
 
 // This is the install event

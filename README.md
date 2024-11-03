@@ -15,3 +15,9 @@ Clone the github repository using this line of code in git: "git clone https://g
 Open the project in Visual Studio Code.
 Using the extension live server, click "Open With Live Server" at the bottom right of the window.
 The webpage should open in a new tab in your default browser!
+
+The service worker uses the cache to save the files used in the Budget Tracker. This includes the html, css and js files, as well as images for the app, screenshot
+images for shortcuts, and select icon images that are smaller in size to avoid taking up too much space in the cache.
+
+The manifest file allows the user to download the PWA to be like a local app on their device. It includes the colors and overall look of the PWA, and it also includes
+icons of various sizes and screenshots of adding income and adding expenses for the shortcuts.

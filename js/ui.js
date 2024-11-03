@@ -109,7 +109,7 @@ function displayTransfer(transfer) {
                              style="margin-bottom: 0;">
                             <!-- Small image icon -->
                             <div class="col s2 m1 l1">
-                                <img src="/img/${transfer.type}.jpeg"
+                                <img src="/img/${transfer.type}.png"
                                      class="circle responsive-img"
                                      alt="${transfer.type} Icon">
                             </div>

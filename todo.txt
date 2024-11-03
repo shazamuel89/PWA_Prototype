@@ -4,3 +4,4 @@ Figure out why transactions aren't persistent when closing and reopening live se
 
 Add date to transactions
 
+If you change anything about the look in index.html, update the screenshots/shortcuts

@@ -1,0 +1,76 @@
+{
+    "name": "Budget Tracker",
+    "short_name": "BT",
+    "description": "Track your money and transactions",
+    "start_url": "/index.html",
+    "scope": "/",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "background_color": "#B2EBF2",
+    "theme_color": "#BA68C8",
+    "lang": "en-US",
+    "icons": [
+        {
+            "src": "/img/icons/favicon-512x512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        },
+        {
+            "src": "/img/icons/favicon-192x192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "/img/icons/favicon-32x32.png",
+            "type": "image/png",
+            "sizes": "32x32"
+        },
+        {
+            "src": "/img/icons/favicon-16x16.png",
+            "type": "image/png",
+            "sizes": "16x16"
+        }
+    ],
+
+    "screenshots": [
+        {
+            "src": "/img/screenshots/screenshot_add_income.png",
+            "type": "image/png",
+            "sizes": "1919x951",
+            "form_factor": "wide"
+        },
+        {
+            "src": "/img/screenshots/screenshot_add_expense.png",
+            "type": "image/png",
+            "sizes": "1920x952",
+            "form_factor": "narrow"
+        }
+    ],
+
+    "shortcuts": [
+        {
+            "name": "Add income",
+            "short_name": "income",
+            "description": "Quickly add a new income transaction",
+            "url": "/new-income",
+            "icons": [
+                {
+                    "src": "/img/screenshots/screenshot_add_income.png",
+                    "sizes": "1919x951"
+                }
+            ]
+        },
+        {
+            "name": "Add expense",
+            "short_name": "expense",
+            "description": "Quickly add a new expense transaction",
+            "url": "/new-expense",
+            "icons": [
+                {
+                    "src": "/img/screenshots/screenshot_add_expense.png",
+                    "sizes": "1920x952"
+                }
+            ]
+        }
+    ]
+}
