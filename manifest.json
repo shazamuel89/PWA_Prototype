@@ -36,13 +36,13 @@
         {
             "src": "/img/screenshots/screenshot_add_income.png",
             "type": "image/png",
-            "sizes": "1919x951",
+            "sizes": "578x845",
             "form_factor": "wide"
         },
         {
             "src": "/img/screenshots/screenshot_add_expense.png",
             "type": "image/png",
-            "sizes": "1920x952",
+            "sizes": "578x844",
             "form_factor": "narrow"
         }
     ],
@@ -56,7 +56,7 @@
             "icons": [
                 {
                     "src": "/img/screenshots/screenshot_add_income.png",
-                    "sizes": "1919x951"
+                    "sizes": "578x845"
                 }
             ]
         },
@@ -68,7 +68,7 @@
             "icons": [
                 {
                     "src": "/img/screenshots/screenshot_add_expense.png",
-                    "sizes": "1920x952"
+                    "sizes": "578x844"
                 }
             ]
         }

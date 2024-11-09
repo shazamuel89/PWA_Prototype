@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const forms = document.querySelectorAll("select");
     var instances = M.FormSelect.init(forms);
 
-    loadTransfers();
+    loadtransactions();
 
     checkStorageUsage();
 });
@@ -25,146 +25,152 @@ if ("serviceWorker" in navigator) { // If service worker works in browser (navig
 async function createDB() {
     const db = await openDB("budgetTracker", 1, { // Uses openDB to open a database named budgetTracker with the version 1
         upgrade(db) { // This is called if the database is being created for the first time or if the version number is updated
-            if (!db.objectStoreNames.contains("transfers")) {
-                const store = db.createObjectStore("transfers", { // Creates a table-like object store called transfers
-                    keyPath: "id", // Specifies that each entry in "transfers" will have a unique identifier called "id" which is the primary key
-                    autoIncrement: true, // Automatically assigns a unique, incrementing value to the "id" field for each transfer
+            if (!db.objectStoreNames.contains("transactions")) {
+                const store = db.createObjectStore("transactions", { // Creates a table-like object store called transactions
+                    keyPath: "id", // Specifies that each entry in "transactions" will have a unique identifier called "id" which is the primary key
+                    autoIncrement: true, // Automatically assigns a unique, incrementing value to the "id" field for each transaction
                 });
                 store.createIndex("status", "status"); // Creates an index to refer to entries in object store, called "status". Index will use "status" property to lookup entries.
-                console.log("Object store 'transfers' created.")
+                console.log("Object store 'transactions' created.")
             }
         }
     });
     return db; // Returns the database to the calling function
 }
 
-// Add transfer
-async function addTransfer(transfer) {
+// Add transaction
+async function addtransaction(transaction) {
     const db = await createDB();
 
-    // Start transfer
-    const tx = db.transaction("transfers", "readwrite");
-    const store = tx.objectStore("transfers");
+    // Start transaction
+    const tx = db.transaction("transactions", "readwrite");
+    const store = tx.objectStore("transactions");
 
-    // Add transfer to store
-    await store.add(transfer);
+    // Add transaction to store
+    await store.add(transaction);
 
-    // Complete transfer
+    // Complete transaction
     await tx.done;
 
     // Update storage usage
     checkStorageUsage();
 }
 
-// Delete transfer
-async function deleteTransfer(id) {
+// Delete transaction
+async function deletetransaction(id) {
     const db = await createDB();
 
     // Start transaction
-    const tx = db.transaction("transfers", "readwrite");
-    const store = tx.objectStore("transfers");
+    const tx = db.transaction("transactions", "readwrite");
+    const store = tx.objectStore("transactions");
 
-    // Delete transfer by id
+    // Delete transaction by id
     await store.delete(id);
 
     await tx.done;
 
-    // Remove transfer from UI
-    const transferCard = document.querySelector(`[data-id="${id}"]`);
-    if (transferCard) {
-        transferCard.remove();
+    // Remove transaction from UI
+    const transactionCard = document.querySelector(`[data-id="${id}"]`);
+    if (transactionCard) {
+        transactionCard.remove();
     }
 
     // Update storage usage
     checkStorageUsage();
 }
 
-// Load transfers
-async function loadTransfers() {
+// Load transactions
+async function loadtransactions() {
     const db = await createDB();
 
     // Start transaction
-    const tx = db.transaction("transfers", "readonly");
-    const store = tx.objectStore("transfers");
+    const tx = db.transaction("transactions", "readonly");
+    const store = tx.objectStore("transactions");
 
-    // Get all transfers
-    const transfers = await store.getAll();
+    // Get all transactions
+    const transactions = await store.getAll();
 
-    console.log(transfers);
+    console.log(transactions);
 
     await tx.done;
 
-    const transferContainer = document.querySelector(".transfers");
-    transferContainer.innerHTML = "";
-    transfers.forEach((transfer) => {
-        displayTransfer(transfer);
+    const transactionContainer = document.querySelector(".transactions");
+    transactionContainer.innerHTML = "";
+    transactions.forEach((transaction) => {
+        displaytransaction(transaction);
     });
 }
 
-// Display transfer using the existing HTML structure
-function displayTransfer(transfer) {
-    const transferContainer = document.querySelector(".transfers");
-    const html = `<li class="collection-item yellow lighten-3 black-text" data-id=${transfer.id}>
+// Display transaction using the existing HTML structure
+function displaytransaction(transaction) {
+    const transactionContainer = document.querySelector(".transactions");
+    const html = `<li class="collection-item yellow lighten-3 black-text" data-id=${transaction.id}>
                         <div class="row valign-wrapper"
                              style="margin-bottom: 0;">
                             <!-- Small image icon -->
                             <div class="col s2 m1 l1">
-                                <img src="/img/${transfer.type}.png"
+                                <img src="/img/${transaction.type}.png"
                                      class="circle responsive-img"
-                                     alt="${transfer.type} Icon">
+                                     alt="${transaction.type} Icon">
                             </div>
                             <!-- Centered text next to icon -->
                             <div class="col s9 m10 l10">
                                 <span class="black-text">
-                                    ${transfer.type}: ${transfer.category} - $${transfer.amount} (${transfer.description})
+                                    ${transaction.type}: ${transaction.category} - $${transaction.amount} (${transaction.description})
+                                    <br>${transaction.date}
                                 </span>
                             </div>
                             <!-- Delete icon -->
                             <div class="col s1 m1 l1">
-                                <button class="transfer-delete btn-flat" aria-label="Delete Transaction">
+                                <button class="transaction-delete btn-flat" aria-label="Delete Transaction">
                                     <i class="material-icons black-text-darken-1">delete</i>
                                 </button>
                             </div>
                         </div>
                     </li>`;
-    transferContainer.insertAdjacentHTML("beforeend", html);
+    transactionContainer.insertAdjacentHTML("beforeend", html);
 
     // Attach delete event listener
-    const deleteButton = transferContainer.querySelector(`[data-id="${transfer.id}"] .transfer-delete`);
+    const deleteButton = transactionContainer.querySelector(`[data-id="${transaction.id}"] .transaction-delete`);
 
     if (deleteButton) {
-        deleteButton.addEventListener("click", () => deleteTransfer(transfer.id));
+        deleteButton.addEventListener("click", () => deletetransaction(transaction.id));
     }
 }
 
-// Add transfer button listener
-const addTransferButton = document.querySelector(".add-transfer");
-addTransferButton.addEventListener("click", async (event) => {
+// Add transaction button listener
+const addtransactionButton = document.querySelector(".add-transaction");
+addtransactionButton.addEventListener("click", async (event) => {
     const typeInput = document.querySelector("#type");
     const categoryInput = document.querySelector("#category");
     const amountInput = document.querySelector("#amount");
     const descriptionInput = document.querySelector("#description");
+    const dateInput = document.querySelector("#date");
 
-    // Create an object with the values of the transfer
-    const transfer = {
+    const [year, month, day] = dateInput.value.split("-");
+
+    // Create an object with the values of the transaction
+    const transaction = {
         type: typeInput.options[typeInput.selectedIndex].text,
         category: categoryInput.value,
         amount: parseFloat(amountInput.value).toFixed(2),
         description: descriptionInput.value,
+        date: `${month}-${day}-${year.slice(-2)}`,
         status: "pending"
     };
 
-    // Update the IndexedDB with the transfer
-    await addTransfer(transfer);
+    // Update the IndexedDB with the transaction
+    await addtransaction(transaction);
 
-    // Display the transfer
-    displayTransfer(transfer);
+    // Display the transaction
+    displaytransaction(transaction);
 
     // Set the values in the fields back to the empty string
     typeInput.value = "";
     categoryInput.value = "";
     amountInput.value = "";
     descriptionInput.value = "";
+    dateInput.value = "";
 });
 
 async function checkStorageUsage() {

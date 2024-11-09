@@ -1,7 +1,0 @@
-Figure out why only every other transaction is added
-
-Figure out why transactions aren't persistent when closing and reopening live server
-
-Add date to transactions
-
-If you change anything about the look in index.html, update the screenshots/shortcuts
