@@ -116,21 +116,6 @@
                 </h5>
                 <form>
                     <div class="input-field">
-                        <input id="amount"
-                               type="number"
-                               placeholder="00.00">
-                        <label for="amount">
-                            Amount in US dollars
-                        </label>
-                    </div>
-                    <div class="input-field">
-                        <input id="date"
-                               type="date">
-                        <label for="date">
-                            Date of Transaction
-                        </label>
-                    </div>
-                    <div class="input-field">
                         <select id="type">
                             <option value=""
                                     disabled
@@ -144,8 +129,23 @@
                                 Expense
                             </option>
                         </select>
-                        <label>
+                        <label for="type">
                             Transaction Type
+                        </label>
+                    </div>
+                    <div class="input-field">
+                        <input id="amount"
+                               type="number"
+                               placeholder="00.00">
+                        <label for="amount">
+                            Amount in US dollars
+                        </label>
+                    </div>
+                    <div class="input-field">
+                        <input id="date"
+                               type="date">
+                        <label for="date">
+                            Date of Transaction
                         </label>
                     </div>
                     <div class="input-field">
@@ -164,11 +164,15 @@
                             Description
                         </label>
                     </div>
-                    <button class="add-transfer btn red lighten-2 waves-effect waves-light"
-                            type="submit"
-                            name="action">
-                        Add Transaction
-                    </button>
+                    <input type="hidden"
+                           id="transaction-id"/>
+                    <div class="input-field-center">
+                        <button type="button"
+                                class="btn red lighten-2 waves-effect waves-light"
+                                id="form-action-btn">
+                            Add Transaction
+                        </button>
+                    </div>
                 </form>
             </div>
             <!-- This is the transaction list -->
@@ -176,7 +180,7 @@
                 <h5 class="teal-text text-darken-2">
                     Recent Transactions
                 </h5>
-                <ul class="collection z-depth-2 transfers">
+                <ul class="collection z-depth-2 transactions">
                 </ul>
             </div>
             <!-- This is the budget summary -->

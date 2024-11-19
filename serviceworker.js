@@ -55,16 +55,24 @@ self.addEventListener("activate", (event) => { // Upon activate event triggered 
 self.addEventListener("fetch", (event) => { // Upon fetch event triggered by requesting a resource
     console.log("Service Worker: Fetching...", event.request.url); // Log that the SW is fetching the requested url
     event.respondWith( // Respond to the event request with
-        caches.match(event.request).then((cachedResponse) => { // caches.match checks if request exists in cache, and returns cached response if found or undefined if not
-            if (cachedResponse) { // If requested resource is in cache
-                return cachedResponse; // Then return that cached resource
-            } // Otherwise
-            return fetch(event.request).then((networkResponse) => { // Fetch the request as networkResponse
-                return caches.open(CACHE_NAME).then((cache) => { // Open the cache with the current name, then
-                    cache.put(event.request, networkResponse.clone()); // Put a copy of the networkResponse in the requested location in the cache
-                    return networkResponse; // Then return the networkResponse for the user
-                });
-            });
-        })
+        (async function() {
+            // Only cache get requests
+            if (event.request.method !== "GET") {
+                return fetch(event.request);
+            }
+            const cachedResponse = await caches.match(event.request);
+            if (cachedResponse) {
+                return cachedResponse;
+            }
+            try {
+                const networkResponse = await fetch(event.request);
+                const cache = await caches.open(CACHE_NAME);
+                cache.put(event.request, networkResponse.clone()); // Update cache with the fetched response
+                return networkResponse;
+            } catch (error) {
+                console.error("Fetch failed, returning offline page: ", error);
+                // Optionally, return an offline page here if available in the cache
+            }
+        })()
     );
 });

@@ -29,7 +29,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Add a Transaction
-export async function addTransaction(transaction) {
+export async function addTransactionToFirebase(transaction) {
     try {
         const docRef = await addDoc(collection(db, "transactions"), transaction);
         return {id: docRef.id, ...transaction};
@@ -39,7 +39,7 @@ export async function addTransaction(transaction) {
 }
 
 // Get Transactions
-export async function getTransactions() {
+export async function getTransactionsFromFirebase() {
     const transactions = [];
     try {
         const querySnapshot = await getDocs(collection(db, "transactions"));
@@ -53,7 +53,7 @@ export async function getTransactions() {
 }
 
 // Delete Transaction
-export async function deleteTransaction(id) {
+export async function deleteTransactionFromFirebase(id) {
     try {
         await deleteDoc(doc(db, "transactions", id));
     } catch (error) {
@@ -62,7 +62,7 @@ export async function deleteTransaction(id) {
 }
 
 // Update Transaction
-export async function updateTransaction(id, updatedData) {
+export async function updateTransactionInFirebase(id, updatedData) {
     try {
         const transactionRef = doc(db, "transactions", id);
         await updateDoc(transactionRef, updatedData);
