@@ -11,6 +11,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const forms = document.querySelectorAll("select");
     var instances = M.FormSelect.init(forms);
 
+    // Initially have the add transaction button say "Add"
+    document.querySelector("#form-action-btn").textContent = "Add Transaction";
+
     // Load transactions from the IndexedDB
     loadTransactions();
     syncTransactions();
@@ -253,7 +256,7 @@ function displayTransaction(transaction) {
                             <!-- Edit icon -->
                             <div class="col s1 m1 l1">
                                 <button class="transaction-edit btn-flat" aria-label="Edit Transaction">
-                                    <i class="material-icons black-text-darken-1">delete</i>
+                                    <i class="material-icons black-text-darken-1">edit</i>
                                 </button>
                             </div>
                         </div>
@@ -270,9 +273,13 @@ function displayTransaction(transaction) {
     const editButton = transactionContainer.querySelector(
         `[data-id="${transaction.id}"] .transaction-edit`
     );
-    editButton.addEventListener("click", () => 
+    editButton.addEventListener("click", () => {
         openEditForm(transaction.id, transaction.type, transaction.amount, transaction.date, transaction.category, transaction.description)
-    );
+        const editFormElement = document.getElementById("add-or-edit-form");
+        if (editFormElement) {
+            editFormElement.scrollIntoView({ behavior: "smooth" });
+        }
+    });
 }
 
 // Add/Edit transaction button listener
@@ -284,7 +291,6 @@ addTransactionButton.addEventListener("click", async () => {
     const categoryInput = document.querySelector("#category");
     const descriptionInput = document.querySelector("#description");
     const transactionIdInput = document.querySelector("#transaction-id");
-    const formActionButton = document.querySelector("#form-action-btn");
     // Prepare the transaction data
     const transactionId = transactionIdInput.value; // If editing, this will have a value
     
@@ -315,17 +321,25 @@ function openEditForm(id, type, amount, date, category, description) {
     const categoryInput = document.querySelector("#category");
     const descriptionInput = document.querySelector("#description");
     const transactionIdInput = document.querySelector("#transaction-id");
-    const formActionButton = document.querySelector("form-action-btn");
+    const formActionButton = document.querySelector("#form-action-btn");
 
     // Fill in form with existing transaction data
-    typeInput.value = type;
+    // Get type value that works with select element
+    if (type == "Income") {
+        typeInput.value = "1";
+    }
+    else if (type == "Expense") {
+        typeInput.value = "2";
+    }
     amountInput.value = amount;
-    dateInput.value = date;
+    const [month, day, year] = date.split("-");
+    dateInput.value = `19${year}-${month}-${day}`;
     categoryInput.value = category;
     descriptionInput.value = description;
     transactionIdInput.value = id; // Set transactionId for the edit operation
-    formActionButton.textContent = "Edit"; // Change the button text to "Edit"
+    formActionButton.textContent = "Edit Transaction"; // Change the button text to "Edit Transaction"
 
+    M.FormSelect.init(typeInput); // Reinitialize the select element
     M.updateTextFields(); // Materialize CSS form update
 }
 
@@ -337,7 +351,7 @@ function clearForm() {
     const categoryInput = document.querySelector("#category");
     const descriptionInput = document.querySelector("#description");
     const transactionIdInput = document.querySelector("#transaction-id");
-    const formActionButton = document.querySelector("form-action-btn");
+    const formActionButton = document.querySelector("#form-action-btn");
 
     typeInput.value = "";
     amountInput.value = "";
@@ -345,7 +359,7 @@ function clearForm() {
     categoryInput.value = "";
     descriptionInput.value = "";
     transactionIdInput.value = ""; // Set transactionId for the edit operation
-    formActionButton.textContent = "Add"; // Change the button text to "Edit"
+    formActionButton.textContent = "Add Transaction"; // Change the button text to "Add Transaction"
 }
 
 // Function to check storage usage

@@ -110,7 +110,8 @@
                 </div>
             </div>
             <!-- This is the transaction input card -->
-            <div class="container">
+            <div class="container"
+                 id="add-or-edit-form">
                 <h5 class="teal-text text-darken-2">
                     Add Transaction
                 </h5>
@@ -136,14 +137,14 @@
                     <div class="input-field">
                         <input id="amount"
                                type="number"
-                               placeholder="00.00">
+                               placeholder="00.00"/>
                         <label for="amount">
                             Amount in US dollars
                         </label>
                     </div>
                     <div class="input-field">
                         <input id="date"
-                               type="date">
+                               type="date"/>
                         <label for="date">
                             Date of Transaction
                         </label>
@@ -151,7 +152,7 @@
                     <div class="input-field">
                         <input id="category"
                                type="text"
-                               placeholder="Enter category (groceries, rent, paycheck, etc.)">
+                               placeholder="Enter category (groceries, rent, paycheck, etc.)"/>
                         <label for="category">
                             Category
                         </label>
@@ -159,7 +160,7 @@
                     <div class="input-field">
                         <input id="description"
                                type="text"
-                               placeholder="Enter a short description">
+                               placeholder="Enter a short description"/>
                         <label for="description">
                             Description
                         </label>
@@ -170,7 +171,6 @@
                         <button type="button"
                                 class="btn red lighten-2 waves-effect waves-light"
                                 id="form-action-btn">
-                            Add Transaction
                         </button>
                     </div>
                 </form>
