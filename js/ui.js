@@ -3,16 +3,38 @@ import { addTransactionToFirebase, deleteTransactionFromFirebase, getTransaction
 
 const STORAGE_THRESHOLD = 0.8;
 
+// Declaring input variables here to make code more concise
+let typeInput, amountInput, dateInput, categoryInput, descriptionInput, transactionIdInput, formActionButton;
+
 document.addEventListener("DOMContentLoaded", function () {
+    // Initialize form variables to make code more readable
+    typeInput = document.querySelector("#type");
+    amountInput = document.querySelector("#amount");
+    dateInput = document.querySelector("#date");
+    categoryInput = document.querySelector("#category");
+    descriptionInput = document.querySelector("#description");
+    transactionIdInput = document.querySelector("#transaction-id");
+    formActionButton = document.querySelector("#form-action-btn");
+
+    // Add event listeners to all form inputs
+    [typeInput, amountInput, dateInput, categoryInput, descriptionInput].forEach(input => {
+        input.addEventListener("input", toggleButtonState); // Listen for input changes
+    });
+    formActionButton.addEventListener("click", addOrEditTransactionButton);
+    toggleButtonState();
+
     // Sidenav Initialization
     const menus = document.querySelector(".sidenav");
     M.Sidenav.init(menus, { edge: "left" });
+
     // Initializes select elements with materialize fonts
     const forms = document.querySelectorAll("select");
     var instances = M.FormSelect.init(forms);
 
-    // Initially have the add transaction button say "Add"
-    document.querySelector("#form-action-btn").textContent = "Add Transaction";
+    // Initially have the add transaction button say "Add Transaction"
+    formActionButton.textContent = "Add Transaction";
+    formActionButton.classList.remove("red") // Remove red from the class list if it is there
+    formActionButton.classList.add("green"); // Initialize the color to represent adding
 
     // Load transactions from the IndexedDB
     loadTransactions();
@@ -90,6 +112,26 @@ async function syncTransactions() {
 // Check if the app is online
 function isOnline() {
     return navigator.onLine;
+}
+
+// Returns true if every input field is not empty, false otherwise
+function formIsValid() {
+    return (
+        typeInput.value &&
+        amountInput.value &&
+        dateInput.value &&
+        categoryInput.value.trim() &&
+        descriptionInput.value.trim()
+    );
+}
+
+// Toggles submit button state
+function toggleButtonState() {
+    if (formIsValid()) {
+        formActionButton.disabled = false; // Enable button
+    } else {
+        formActionButton.disabled = true; // Disable button
+    }
 }
 
 // Add transaction
@@ -283,14 +325,7 @@ function displayTransaction(transaction) {
 }
 
 // Add/Edit transaction button listener
-const addTransactionButton = document.querySelector("#form-action-btn");
-addTransactionButton.addEventListener("click", async () => {
-    const typeInput = document.querySelector("#type");
-    const amountInput = document.querySelector("#amount");
-    const dateInput = document.querySelector("#date");
-    const categoryInput = document.querySelector("#category");
-    const descriptionInput = document.querySelector("#description");
-    const transactionIdInput = document.querySelector("#transaction-id");
+async function addOrEditTransactionButton() {
     // Prepare the transaction data
     const transactionId = transactionIdInput.value; // If editing, this will have a value
     
@@ -311,18 +346,10 @@ addTransactionButton.addEventListener("click", async () => {
     }
     // Set the values in the fields back to the empty string
     clearForm();
-});
+};
 
 // Open Edit form with existing transaction data
 function openEditForm(id, type, amount, date, category, description) {
-    const typeInput = document.querySelector("#type");
-    const amountInput = document.querySelector("#amount");
-    const dateInput = document.querySelector("#date");
-    const categoryInput = document.querySelector("#category");
-    const descriptionInput = document.querySelector("#description");
-    const transactionIdInput = document.querySelector("#transaction-id");
-    const formActionButton = document.querySelector("#form-action-btn");
-
     // Fill in form with existing transaction data
     // Get type value that works with select element
     if (type == "Income") {
@@ -333,26 +360,21 @@ function openEditForm(id, type, amount, date, category, description) {
     }
     amountInput.value = amount;
     const [month, day, year] = date.split("-");
-    dateInput.value = `19${year}-${month}-${day}`;
+    dateInput.value = `20${year}-${month}-${day}`;
     categoryInput.value = category;
     descriptionInput.value = description;
     transactionIdInput.value = id; // Set transactionId for the edit operation
     formActionButton.textContent = "Edit Transaction"; // Change the button text to "Edit Transaction"
+    formActionButton.classList.remove("green"); // Remove green from the class list if it is there
+    formActionButton.classList.add("red"); // And change the color to represent editing
 
     M.FormSelect.init(typeInput); // Reinitialize the select element
     M.updateTextFields(); // Materialize CSS form update
+    toggleButtonState();
 }
 
 // Helper function to reset form after use
 function clearForm() {
-    const typeInput = document.querySelector("#type");
-    const amountInput = document.querySelector("#amount");
-    const dateInput = document.querySelector("#date");
-    const categoryInput = document.querySelector("#category");
-    const descriptionInput = document.querySelector("#description");
-    const transactionIdInput = document.querySelector("#transaction-id");
-    const formActionButton = document.querySelector("#form-action-btn");
-
     typeInput.value = "";
     amountInput.value = "";
     dateInput.value = "";
@@ -360,6 +382,9 @@ function clearForm() {
     descriptionInput.value = "";
     transactionIdInput.value = ""; // Set transactionId for the edit operation
     formActionButton.textContent = "Add Transaction"; // Change the button text to "Add Transaction"
+    formActionButton.classList.remove("red"); // Remove red from class list if it is there
+    formActionButton.classList.add("green"); // And change the color to represent adding
+    toggleButtonState();
 }
 
 // Function to check storage usage
@@ -394,7 +419,7 @@ async function checkStorageUsage() {
 // Request persistent storage
 async function requestPersistentStorage() {
     if (navigator.storage && navigator.storage.persist) {
-        const isPersistent =  await navigator.storage.persist();
+        const isPersistent = await navigator.storage.persist();
         console.log(`Persistent storage granted: ${isPersistent}`);
 
         const storageMessage = document.querySelector("#persistent-storage-info");
