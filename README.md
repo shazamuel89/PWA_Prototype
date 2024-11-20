@@ -21,3 +21,10 @@ images for shortcuts, and select icon images that are smaller in size to avoid t
 
 The manifest file allows the user to download the PWA to be like a local app on their device. It includes the colors and overall look of the PWA, and it also includes
 icons of various sizes and screenshots of adding income and adding expenses for the shortcuts.
+
+I have added support for Firebase and IndexedDB, which allow the transactions a user adds to be saved even after the user leaves the page.
+The transactions are saved to IndexedDB, which is stored on the user's computer, so it can be accessed offline.
+The transactions are also synced to a Firebase database, which is online. This means that they are backed up in an online database.
+If the user adds or edits transactions offline, then the transactions are added to the IndexedDB, then synced with Firebase whenever the user gets back online.
+The user can also edit transactions that have already been added by clicking the edit icon on the transaction, then updating the information that is prefilled in the form above,
+then clicking "Edit Transaction". The edits will appear immediately and will be synced with both databases offline and online.
