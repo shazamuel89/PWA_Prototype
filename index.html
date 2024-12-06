@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
+        <meta charset="UTF-8"/>
         <meta name="viewport"
-              content="width=device-width, initial-scale=1.0">
+              content="width=device-width, initial-scale=1.0"/>
         <title>
             Budget Tracker
         </title>
@@ -59,6 +59,14 @@
                                 Contact
                             </a>
                         </li>
+                        <li>
+                            <a href="#"
+                               id="logout-btn"
+                               class="waves-effect amber-text text-lighten-3"
+                               style="display: none">
+                                Logout
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </nav>
@@ -88,6 +96,12 @@
                        class="waves-effect white-text">
                         <i class="material-icons white-text right">mail_outline</i>
                         Contact
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                       class="waves-effect white-text">
+                        Logout
                     </a>
                 </li>
             </ul>
@@ -204,7 +218,11 @@
             </div>
         </main>
         <script src="/js/materialize.min.js"></script>
-        <script type="module" src="/js/ui.js"></script>
-        <script type="module" src="/js/firebaseDB.js"></script>
+        <script type="module"
+                src="/js/ui.js"></script>
+        <script type="module"
+                src="/js/firebaseDB.js"></script>
+        <script type="module"
+                src="/js/auth.js"></script>
     </body>
 </html>

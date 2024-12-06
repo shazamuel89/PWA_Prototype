@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="X-UA-Compatible"
+              content="IE=edge"/>
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0"/>
+        <title>
+            Budget Tracker
+        </title>
+        <link rel="stylesheet"
+              href="/css/materialize.min.css"/>
+        <link rel="stylesheet"
+              href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    </head>
+    <body class="cyan lighten-4">
+        <div class="container z-depth-3"
+             style="margin-top: 50px; padding: 20px; border-radius: 10px;">
+            <!-- Sign In Form -->
+            <div id="sign-in-form"
+                 class="row">
+                <h4 class="center-align teal-text text-darken-2">
+                    Sign In
+                </h4>
+                <div class="input-field col s12">
+                    <input type="email"
+                           id="sign-in-email"
+                           class="validate"
+                           required/>
+                    <label for="sign-in-email">
+                        Email
+                    </label>
+                </div>
+                <div class="input-field col s12">
+                    <input type="password"
+                           id="sign-in-password"
+                           class="validate"
+                           required/>
+                    <label for="sign-in-password">
+                        Password
+                    </label>
+                </div>
+                <div class="col s12">
+                    <button id="sign-in-btn"
+                            class="btn green lighten-2 waves-effect waves-light col s12">
+                        Sign In
+                    </button>
+                </div>
+                <div class="col s12 center-align">
+                    <p>
+                        Don't have an account?
+                        <a href="#"
+                           id="show-signup"
+                           class="green-text">
+                            Sign Up
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <!-- Sign Up Form -->
+            <div id="sign-up-form"
+                 class="row"
+                 style="display: none;">
+                <h4 class="center-align teal-text text-darken-2">
+                    Sign Up
+                </h4>
+                <div class="input-field col s12">
+                    <input type="email"
+                           id="sign-up-email"
+                           class="validate"
+                           required/>
+                    <label for="sign-up-email">
+                        Email
+                    </label>
+                </div>
+                <div class="input-field col s12">
+                    <input type="password"
+                           id="sign-up-password"
+                           class="validate"
+                           required/>
+                    <label for="sign-up-password">
+                        Password
+                    </label>
+                </div>
+                <div class="col s12">
+                    <button id="sign-up-btn"
+                            class="btn blue lighten-2 waves-effect waves-light col s12">
+                        Sign Up
+                    </button>
+                </div>
+                <div class="col s12 center-align">
+                    <p>
+                        Already have an account?
+                        <a href="#"
+                           id="show-signin"
+                           class="green-text">
+                            Sign In
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <script src="/js/materialize.min.js"></script>
+        <script type="module"
+                src="/js/signIn.js"></script>
+    </body>
+</html>
