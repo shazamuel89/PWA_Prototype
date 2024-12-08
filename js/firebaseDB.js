@@ -1,37 +1,34 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { currentUser } from "./auth.js";
+import { db } from "./firebaseConfig.js";
 import {
-    getFirestore,
     collection,
     doc,
     addDoc,
+    setDoc,
     getDocs,
     deleteDoc,
     updateDoc
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyD89_R4P0IqKnNct05I9n_udz-iF3WHYY8",
-  authDomain: "budgettracker-b8d7c.firebaseapp.com",
-  projectId: "budgettracker-b8d7c",
-  storageBucket: "budgettracker-b8d7c.firebasestorage.app",
-  messagingSenderId: "1055163160411",
-  appId: "1:1055163160411:web:60a82d7c4804e492f62c7e",
-  measurementId: "G-GKTE617NSD"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
 // Add a Transaction
 export async function addTransactionToFirebase(transaction) {
     try {
-        const docRef = await addDoc(collection(db, "transactions"), transaction);
+        if (!currentUser) {
+            throw new Error("User is not authenticated");
+        }
+        const userId = currentUser.uid;
+        console.log("userID: ", userId);
+        const userRef = doc(db, "users", userId);
+        await setDoc(
+            userRef,
+            {
+                email: currentUser.email,
+                name: currentUser.displayName
+            },
+            { merge: true }
+        );
+        const transactionsRef = collection(userRef, "transactions");
+        const docRef = await addDoc(transactionsRef, transaction);
         return {id: docRef.id, ...transaction};
     } catch(error) {
         console.error("Error adding transaction: ", error);
@@ -42,7 +39,12 @@ export async function addTransactionToFirebase(transaction) {
 export async function getTransactionsFromFirebase() {
     const transactions = [];
     try {
-        const querySnapshot = await getDocs(collection(db, "transactions"));
+        if (!currentUser) {
+            throw new Error("User is not authenticated");
+        }
+        const userId = currentUser.uid;
+        const transactionsRef = collection(doc(db, "users", userId), "transactions");
+        const querySnapshot = await getDocs(transactionsRef);
         querySnapshot.forEach((doc) => {
             transactions.push({id: doc.id, ...doc.data() });
         });
@@ -55,7 +57,11 @@ export async function getTransactionsFromFirebase() {
 // Delete Transaction
 export async function deleteTransactionFromFirebase(id) {
     try {
-        await deleteDoc(doc(db, "transactions", id));
+        if (!currentUser) {
+            throw new Error("User is not authenticated");
+        }
+        const userId = currentUser.uid;
+        await deleteDoc(doc(db, "users", userId, "transactions", id));
     } catch (error) {
         console.error("Error deleting transaction: ", error);
     }
@@ -64,7 +70,11 @@ export async function deleteTransactionFromFirebase(id) {
 // Update Transaction
 export async function updateTransactionInFirebase(id, updatedData) {
     try {
-        const transactionRef = doc(db, "transactions", id);
+        if (!currentUser) {
+            throw new Error("User is not authenticated");
+        }
+        const userId = currentUser.uid;
+        const transactionRef = doc(db, "users", userId, "transactions", id);
         await updateDoc(transactionRef, updatedData);
     } catch (error) {
         console.error("Error updating transaction: ", error);

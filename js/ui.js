@@ -1,5 +1,10 @@
-import { openDB } from "https:unpkg.com/idb?module";
-import { addTransactionToFirebase, deleteTransactionFromFirebase, getTransactionsFromFirebase, updateTransactionInFirebase } from "/js/firebaseDB.js";
+import { openDB } from "https://unpkg.com/idb?module";
+import {
+    addTransactionToFirebase,
+    deleteTransactionFromFirebase,
+    getTransactionsFromFirebase,
+    updateTransactionInFirebase
+} from "./firebaseDB.js";
 
 const STORAGE_THRESHOLD = 0.8;
 
@@ -35,13 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
     formActionButton.textContent = "Add Transaction";
     formActionButton.classList.remove("red") // Remove red from the class list if it is there
     formActionButton.classList.add("green"); // Initialize the color to represent adding
-
-    // Load transactions from the IndexedDB
-    loadTransactions();
-    syncTransactions();
-    // Check storage usage
     checkStorageUsage();
-    // Request persistent storage
     requestPersistentStorage();
 });
 
@@ -72,7 +71,7 @@ async function getDB() {
 }
 
 // Sync unsynced transactions from IndexedDB to Firebase
-async function syncTransactions() {
+export async function syncTransactions() {
     const db = await getDB();
     const tx = db.transaction("transactions", "readonly");
     const store = tx.objectStore("transactions");
@@ -237,11 +236,11 @@ async function deleteTransaction(id) {
 }
 
 // Load transactions
-async function loadTransactions() {
+export async function loadTransactions() {
     const db = await getDB();
 
     const transactionContainer = document.querySelector(".transactions");
-    transactionContainer.innerHTML = ""; // Clear current tasks
+    transactionContainer.innerHTML = ""; // Clear current transactions
 
     if (isOnline()) {
         const firebaseTransactions = await getTransactionsFromFirebase();
@@ -432,3 +431,6 @@ async function requestPersistentStorage() {
         }
     }
 }
+
+window.addEventListener("online", syncTransactions);
+window.addEventListener("online", loadTransactions);

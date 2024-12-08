@@ -1,19 +1,14 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { auth, db } from "./firebaseConfig.js";
 import {
-    getAuth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged
+    updateProfile
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-
-// This web app's Firebase configuration
-import { firebaseConfig } from "./firebaseConfig.js";
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+import {
+    doc,
+    setDoc
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const signInForm = document.getElementById("sign-in-form");
@@ -48,10 +43,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     signUpBtn.addEventListener("click", async () => {
+        const name = document.getElementById("sign-up-name").value;
         const email = document.getElementById("sign-up-email").value;
         const password = document.getElementById("sign-up-password").value;
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
+            const authCredential = await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+            await updateProfile(authCredential.user, {
+                displayName: name
+            });
+            const docRef = doc(db, "users", authCredential.user.uid);
+            const userProperties = await setDoc(docRef, {
+                email: email,
+                name: name
+            });
+            console.log(userProperties);
             M.toast({ html: "Sign up successful!" });
             window.location.href = "/";
             signUpForm.style.display = "none";

@@ -7,16 +7,12 @@ const ASSETS_TO_CACHE = [
     "/index.html",
     "/pages/about.html",
     "/pages/contact.html",
+    "/pages/profile.html",
     "/css/materialize.min.css",
     "/js/materialize.min.js",
     "/js/ui.js",
-    "/js/firebaseDB.js",
     "/img/Expense.png",
     "/img/Income.png",
-    "/img/icons/favicon-192x192.png",
-    "/img/icons/favicon-16x16.png",
-    "/img/screenshots/screenshot_add_income.png",
-    "/img/screenshots/screenshot_add_expense.png",
     "/manifest.json"
 ];
 
@@ -29,7 +25,6 @@ self.addEventListener("install", (event) => { // self refers to service worker. 
               })
     );
 });
-
 
 // This is the activate event
 self.addEventListener("activate", (event) => { // Upon activate event triggered by SW installation completion
@@ -45,7 +40,6 @@ self.addEventListener("activate", (event) => { // Upon activate event triggered 
         })
     );
 });
-
 
 // This is the fetch event
 self.addEventListener("fetch", (event) => { // Upon fetch event triggered by requesting a resource
