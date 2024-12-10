@@ -1,5 +1,9 @@
-import { currentUser } from "./auth.js";
-import { db } from "./firebaseConfig.js";
+import {
+    currentUser
+} from "./auth.js";
+import {
+    db
+} from "./firebaseConfig.js";
 import {
     collection,
     doc,

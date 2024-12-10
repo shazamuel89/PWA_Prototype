@@ -1,12 +1,22 @@
-import { openDB } from "https://unpkg.com/idb?module";
+import {
+    openDB
+} from "https://unpkg.com/idb?module";
 import {
     addTransactionToFirebase,
     deleteTransactionFromFirebase,
     getTransactionsFromFirebase,
     updateTransactionInFirebase
 } from "./firebaseDB.js";
+import {
+    messaging
+} from "./firebaseConfig.js";
+import {
+    onMessage,
+    getToken
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-messaging.js";
 
 const STORAGE_THRESHOLD = 0.8;
+let serviceWorkerRegistration = null;
 
 // Declaring input variables here to make code more concise
 let typeInput, amountInput, dateInput, categoryInput, descriptionInput, transactionIdInput, formActionButton;
@@ -432,5 +442,36 @@ async function requestPersistentStorage() {
     }
 }
 
-window.addEventListener("online", syncTransactions);
-window.addEventListener("online", loadTransactions);
+// Function to request notification permission and retrieve FCM token
+async function initNotificationPermission() {
+    try {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+            if (!serviceWorkerRegistration) { // Wait until service worker is ready
+                serviceWorkerRegistration = await navigator.serviceWorker.ready;
+            }
+            const token = await getToken(messaging, {
+                vapidKey: "BNdDE2u4JVSjtXpZkoDB85EipWnUaXKVXcb2koG1tV9dRfR0ER8XRsAyIU5bGtk8dQAoLn0a7tNu-mfRjHhywE4",
+                serviceWorkerRegistration: serviceWorkerRegistration
+            });
+            console.log("FCM Token: ", token);
+            // Here, you could send the token to your server for future notifications
+        } else {
+            console.log("Notification permission denied.");
+        }
+    } catch (error) {
+        console.error("Error requesting notification permission: ", error);
+    }
+}
+
+// Initialize and handle foreground messages
+onMessage(messaging, (payload) => {
+    console.log("Message received. ", payload);
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+        body: payload.notification.body,
+        icon: "/img/icons/favicon-192x192.png"
+    };
+    new Notification(notificationTitle, notificationOptions);
+});
+window.initNotificationPermission = initNotificationPermission;

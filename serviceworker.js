@@ -1,6 +1,34 @@
+// Import Firebase libraries using importScripts
+importScripts("https://www.gstatic.com/firebasejs/11.0.1/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/11.0.1/firebase-messaging-compat.js");
+
+// Initialize Firebase in the service worker
+firebase.initializeApp({
+    apiKey: "AIzaSyD89_R4P0IqKnNct05I9n_udz-iF3WHYY8",
+    authDomain: "budgettracker-b8d7c.firebaseapp.com",
+    projectId: "budgettracker-b8d7c",
+    storageBucket: "budgettracker-b8d7c.firebasestorage.app",
+    messagingSenderId: "1055163160411",
+    appId: "1:1055163160411:web:60a82d7c4804e492f62c7e",
+    vapidKey: "BNdDE2u4JVSjtXpZkoDB85EipWnUaXKVXcb2koG1tV9dRfR0ER8XRsAyIU5bGtk8dQAoLn0a7tNu-mfRjHhywE4"
+});
+
+// Retrieve Firebase Messaging instance
+const messaging = firebase.messaging();
+
+// Handle background messages
+messaging.onBackgroundMessage(function (payload) {
+    console.log("[serviceworker.js] Received background message ", payload);
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+        body: payload.notification.body,
+        icon: "/img/icons/favicon-192x192.png"
+    };
+    self.registration.showNotification(notificationTitle, notificationOptions);
+});
+
 // version number is checked upon page reload, if new v#, then reloads cache
 const CACHE_NAME = "budget-tracker-v10";
-
 // These are the assets that will be cached
 const ASSETS_TO_CACHE = [
     "/",
@@ -8,12 +36,12 @@ const ASSETS_TO_CACHE = [
     "/pages/about.html",
     "/pages/contact.html",
     "/pages/profile.html",
+    "/pages/auth.html",
     "/css/materialize.min.css",
     "/js/materialize.min.js",
     "/js/ui.js",
     "/img/Expense.png",
-    "/img/Income.png",
-    "/manifest.json"
+    "/img/Income.png"
 ];
 
 // This is the install event
@@ -64,4 +92,26 @@ self.addEventListener("fetch", (event) => { // Upon fetch event triggered by req
             }
         })()
     );
+});
+
+// Listen for messages from ui.js
+self.addEventListener("message", (event) => {
+    if (event.data && event.data.type === "FCM_TOKEN") {
+        const fcmToken = event.data.token;
+        console.log("Received FCM token in service worker: ", fcmToken);
+        // Here you might store or use the token as needed for push notifications
+    }
+});
+
+// Display notification for background message
+self.addEventListener("push", (event) => {
+    if (event.data) {
+        const payload = event.data.json();
+        const { title, body, icon } = payload.notification;
+        const options = {
+            body,
+            icon: icon || "/img/icons/favicon-192x192.png"
+        };
+        event.waitUntil(self.registration.showNotification(title, options));
+    }
 });

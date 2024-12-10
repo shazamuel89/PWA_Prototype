@@ -1,5 +1,8 @@
 // Import the functions you need from the SDKs you need
-import { auth, db } from "./firebaseConfig.js";
+import {
+    auth,
+    db
+} from "./firebaseConfig.js";
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
