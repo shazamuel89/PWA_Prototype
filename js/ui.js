@@ -52,6 +52,12 @@ document.addEventListener("DOMContentLoaded", function () {
     formActionButton.classList.add("green"); // Initialize the color to represent adding
     checkStorageUsage();
     requestPersistentStorage();
+
+    // Add event listener for the "Enable Notifications" button
+    const notificationButton = document.getElementById("enable-notifications-btn");
+    if (notificationButton) {
+        notificationButton.addEventListener("click", initNotificationPermission);
+    }
 });
 
 // Check if browser supports service workers, if so, register service worker
@@ -258,6 +264,9 @@ export async function loadTransactions() {
         const tx = db.transaction("transactions", "readwrite");
         const store = tx.objectStore("transactions");
 
+        // Sort the transactions by date just before putting them into the IndexedDB
+        firebaseTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
         for (const transaction of firebaseTransactions) {
             await store.put({ ...transaction, synced: true });
             displayTransaction(transaction);
@@ -275,8 +284,6 @@ export async function loadTransactions() {
         // Complete transaction
         await tx.done;
     }
-
-    
 }
 
 // Display transaction using the existing HTML structure
@@ -455,7 +462,18 @@ async function initNotificationPermission() {
                 serviceWorkerRegistration: serviceWorkerRegistration
             });
             console.log("FCM Token: ", token);
-            // Here, you could send the token to your server for future notifications
+            
+            if (token && currentUser) {
+                // Ensure we have a valid currentUser and token before saving
+                const userRef = doc(db, "users", currentUser.uid);
+                const tokenRef = collection(userRef, "fcmTokens");
+
+                // Try saving the token in Firestore
+                await addDoc(tokenRef, { token: token });
+                console.log("Token saved to Firestore successfully");
+            } else {
+                console.log("No valid user or token found.");
+            }
         } else {
             console.log("Notification permission denied.");
         }
@@ -475,3 +493,43 @@ onMessage(messaging, (payload) => {
     new Notification(notificationTitle, notificationOptions);
 });
 window.initNotificationPermission = initNotificationPermission;
+
+setInterval(async () => {
+    const now = new Date();
+    const transactions = await getTransactionsFromFirebase(); // Fetch all transactions from Firestore
+    transactions.forEach((transaction) => {
+        const reminderDate = new Date(transaction.reminderDate);
+        if (reminderDate <= now && !transaction.notified) {
+            // Show local notification
+            new Notification("Reminder", {
+                body: `Reminder for: ${transaction.title}`,
+                icon: "/img/icons/favicon-192x192.png"
+            });
+            // Update transaction to mark as notified
+            transaction.notified = true;
+            updateTransactionInFirebase(transaction.id, { notified: true });
+        }
+    });
+}, 60 * 60 * 1000); // Check every hour
+
+function getGeolocation() {
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            // Store the latitude and longitude in hidden input fields
+            document.getElementById("latitude").value = latitude;
+            document.getElementById("longitide").value = longitude;
+
+            // Update the UI to show location status
+            document.getElementById("location-status").textContent = `Location set: (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`;
+        }, (error) => {
+            console.error("Error getting location: ", error);
+            document.getElementById("location-status").textContent = "Unable to retrieve location.";
+        });
+    } else {
+        document.getElementById("location-status").textContent = "Geolocation not supported.";
+    }
+}
+window.getGeolocation = getGeolocation;
