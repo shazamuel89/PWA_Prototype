@@ -14,6 +14,14 @@ import {
     onMessage,
     getToken
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-messaging.js";
+import {
+    collection,
+    doc,
+    addDoc
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import {
+    currentUser
+} from "./auth.js";
 
 const STORAGE_THRESHOLD = 0.8;
 let serviceWorkerRegistration = null;
@@ -251,12 +259,15 @@ async function deleteTransaction(id) {
     checkStorageUsage();
 }
 
-// Load transactions
+// Load transactions 
 export async function loadTransactions() {
     const db = await getDB();
 
     const transactionContainer = document.querySelector(".transactions");
     transactionContainer.innerHTML = ""; // Clear current transactions
+
+    // This is for adding up final balance of all transactions
+    const transactionAmounts = [];
 
     if (isOnline()) {
         const firebaseTransactions = await getTransactionsFromFirebase();
@@ -264,26 +275,95 @@ export async function loadTransactions() {
         const tx = db.transaction("transactions", "readwrite");
         const store = tx.objectStore("transactions");
 
-        // Sort the transactions by date just before putting them into the IndexedDB
-        firebaseTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-
         for (const transaction of firebaseTransactions) {
             await store.put({ ...transaction, synced: true });
+        }
+        // Sort the transactions just before displaying them
+        sortTransactions(firebaseTransactions);
+
+        for (const transaction of firebaseTransactions) {
             displayTransaction(transaction);
+            transactionAmounts.push({ type: transaction.type, amount: transaction.amount });
         }
         await tx.done;
     } else {
-        // Start transaction (read-only)
+        // Start transaction (read-write, writing is to ensure correct sorting by date)
         const tx = db.transaction("transactions", "readonly");
         const store = tx.objectStore("transactions");
         // Get all transactions
         const transactions = await store.getAll();
-        transactions.forEach((transaction) => {
-        displayTransaction(transaction);
-        });
+
+        // Sort the transactions
+        sortTransactions(transactions);
+
+        // Then display transactions
+        for (const transaction of transactions) {
+            displayTransaction(transaction);
+            transactionAmounts.push({ type: transaction.type, amount: transaction.amount });
+        };
         // Complete transaction
         await tx.done;
     }
+    // Finally, display data calculated from transactions
+    displayBudgetData(transactionAmounts);
+}
+
+// This sorts transactions by date (potentially could add a choice of sorting method)
+function sortTransactions(transactions) {
+    transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+}
+
+// This function takes an array of transaction types and amounts and calculates and displays the budget data based on it
+function displayBudgetData(transactionAmounts) {
+    var totalIncome = 0;
+    var totalExpenses = 0;
+    var totalBalance = 0;
+
+    transactionAmounts.forEach((transaction) => {
+        const amount = parseFloat(transaction.amount);
+        if (transaction.type === "Income") { // If transaction is income
+            totalIncome += amount;
+            totalBalance += amount;
+        } else if (transaction.type === "Expense") { // If transaction is expense
+            totalExpenses += amount;
+            totalBalance -= amount;
+        }
+    });
+
+    // Update values in balance card
+    const balanceContainer = document.querySelector(".balance");
+    const balanceHTML = 
+        `<span class="card-title">
+            Current Balance: $${totalBalance.toFixed(2)}
+        </span>
+        <p>
+            Total Income: $${totalIncome.toFixed(2)}
+        </p>
+        <p>
+            Total Expenses: $${totalExpenses.toFixed(2)}
+        </p>`;
+    balanceContainer.innerHTML = balanceHTML;
+
+    // Update values in summary
+    var progressBarPercentage = (totalBalance < 0) ? 0 : ((totalBalance / totalIncome) * 100);
+    const summaryContainer = document.querySelector(".summary");
+    const summaryHTML = 
+        `<h5 class="teal-text text-darken-2">
+            Budget Overview
+        </h5>
+        <p>
+            Total Monthly Budget: $2000 <strong>*Please note that Monthly Budget is a Work In Progress!*</strong>
+        </p>
+        <p>
+            Remaining: $550.00 <strong>*Please note that Monthly Budget is a Work In Progress!*</strong>
+        </p>
+        <div class="progress red lighten-2 z-depth-2"
+             style="height: 1rem;">
+            <div class="determinate"
+                 style="width: ${progressBarPercentage}%; background-color: #66BB6A;">
+            </div>
+        </div>`;
+    summaryContainer.innerHTML = summaryHTML;
 }
 
 // Display transaction using the existing HTML structure
